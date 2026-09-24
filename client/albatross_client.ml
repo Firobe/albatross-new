@@ -229,7 +229,7 @@ let prepare_update ~happy_eyeballs level host dryrun = function
                 | 0 -> false, unikernel
                 | _ -> true, Vmm_compress.compress ~level unikernel
               in
-              let config = { Vmm_core.Unikernel.typ ; compressed ; image ; fail_behaviour ; startup ; add_name = true; cpuids; memory ; block_devices ; bridges ; argv ; numcpus ; linux_boot_partition } in
+              let config = { Vmm_core.Unikernel.typ ; compressed ; image ; fail_behaviour ; startup ; add_name = true; cpuids; memory ; block_devices ; bridges ; argv ; numcpus ; linux_boot_partition; mount_dir = None } in
               Lwt.return (Ok (`Unikernel_force_create config))
     end
   | Ok w ->
@@ -280,7 +280,7 @@ let create_unikernel typ force image startup no_add_name cpuids memory argv bloc
     else
       Ok cpus
   in
-  let config = { Vmm_core.Unikernel.typ ; compressed ; image ; fail_behaviour ; startup ; add_name = not no_add_name ; cpuids ; memory ; block_devices ; bridges ; argv ; numcpus ; linux_boot_partition } in
+  let config = { Vmm_core.Unikernel.typ ; compressed ; image ; fail_behaviour ; startup ; add_name = not no_add_name ; cpuids ; memory ; block_devices ; bridges ; argv ; numcpus ; linux_boot_partition ; mount_dir = None} in
   if force then Ok (`Unikernel_force_create config) else Ok (`Unikernel_create config)
 
 let policy unikernels memory cpus block bridgesl =

@@ -314,6 +314,7 @@ module Unikernel = struct
     argv : string list option ;
     numcpus : int ; (* for bhyve *)
     linux_boot_partition : string option ; (* for bhyve, esp. linux *)
+    mount_dir : string option;
   }
 
   let bridges (unikernel : config) =

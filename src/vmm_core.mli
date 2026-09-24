@@ -131,6 +131,7 @@ module Unikernel : sig
     argv : string list option ;
     numcpus : int ;
     linux_boot_partition : string option ;
+    mount_dir : string option;
   }
 
   val bridges : config -> string list
