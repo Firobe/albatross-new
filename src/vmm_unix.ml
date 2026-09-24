@@ -551,8 +551,17 @@ let exec_qemu name (config : Unikernel.config) bridge_taps _blocks =
           "-device"; "virtio-net-pci,netdev=hnet0,id=net0"]
     | _ -> Error (`Msg "only one tap supported with qemu")
   in
+  let* mount_9pfs =
+      match config.mount_dir with
+      | None -> Ok []
+      | Some path ->
+        let* fpath = Fpath.of_string path in
+        let* valid_dir = Bos.OS.Dir.exists fpath in
+        let* () = if valid_dir then Ok () else Fmt.error_msg "%s is not a directory" path in
+        Ok ["-virtfs"; "local,path="^(Fpath.to_string fpath)^",mount_tag=fs1,security_model=mapped"]
+  in
   Ok Bos.Cmd.(of_list cpuset %% qemu %% of_list base_args %% of_list machine
-              %% mem %% of_list netdev %% kernel %% of_list argv)
+              %% mem %% of_list netdev %% of_list mount_9pfs %% kernel %% of_list argv)
 
 let exec name (config : Unikernel.config) bridge_taps blocks digest =
   let bridge_taps =
