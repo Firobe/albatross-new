@@ -558,7 +558,7 @@ let exec_qemu name (config : Unikernel.config) bridge_taps _blocks =
         let* fpath = Fpath.of_string path in
         let* valid_dir = Bos.OS.Dir.exists fpath in
         let* () = if valid_dir then Ok () else Fmt.error_msg "%s is not a directory" path in
-        Ok ["-virtfs"; "local,path="^(Fpath.to_string fpath)^",mount_tag=fs1,security_model=mapped"]
+        Ok ["-virtfs"; "local,path="^(Fpath.to_string fpath)^",mount_tag=fs1,security_model=mapped-file"]
   in
   Ok Bos.Cmd.(of_list cpuset %% qemu %% of_list base_args %% of_list machine
               %% mem %% of_list netdev %% of_list mount_9pfs %% kernel %% of_list argv)
